@@ -1,0 +1,5 @@
+# Cyclus outputs
+*.sqlite
+
+#Package file
+packages.xml
