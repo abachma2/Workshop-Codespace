@@ -1,0 +1,27 @@
+---
+layout: post
+title:  "Global 2026 Conference Workshop"
+date:   2026-08-16 13:00:00 -0500
+categories: jekyll update
+---
+
+# Logistics
+
+- Sunday 1-5pm
+- Workshop website: [https://www.ans.org/meetings/global2026/calendar/event-2156/](https://www.ans.org/meetings/global2026/calendar/event-2156/)
+- Please bring a laptop 
+
+# Your Instructors
+
+# How to Ask for Help
+
+# First Steps
+
+Instructions go here.
+
+
+{% highlight shell %}
+$ which cyclus
+$ cyclus_unit_tests
+{% endhighlight %}
+
