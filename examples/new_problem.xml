@@ -1,0 +1,27 @@
+<?xml-model href="../schema/cyclus.rng"
+             type="application/xml"
+             schematypens="http://relaxng.org/ns/structure/1.0"?>
+
+
+<simulation>
+ <control>
+    <startmonth></startmonth>
+    <startyear></startyear>
+    <duration></duration>
+ </control>
+
+ <archetypes>
+     <spec>
+         <name></name>
+     </spec>
+ </archetypes>
+
+ <facility>
+     <name></name>
+     <lifetime></lifetime>
+     <config>
+        
+     </config>
+ </facility>
+
+</simulation>
