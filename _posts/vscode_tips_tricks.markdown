@@ -28,3 +28,5 @@ Codespace.
   * Then inside each of those tags, you can continue to use `<` to help identify 
     tags that can be included inside each level. 
 * Use ``Ctrl+` `` to toggle between the terminal and the file editor space. 
+* `code <file name>` is a terminal shortcut to open files in the VS Code file 
+  editor. 
