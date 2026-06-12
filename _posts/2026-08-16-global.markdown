@@ -6,9 +6,11 @@ date:   2026-08-16 13:00:00 -0500
 
 # Logistics
 
-- Sunday 1-5pm
+- Sunday 1-5pm, Global 2026, Chicago
 - Workshop website: [https://www.ans.org/meetings/global2026/calendar/event-2156/](https://www.ans.org/meetings/global2026/calendar/event-2156/)
 - Please bring a laptop 
+- [VS Code Tricks Reference]({{ site.baseurl }}/pages/vscode_tips_tricks)
+
 
 # Your Instructors
 
@@ -17,7 +19,7 @@ date:   2026-08-16 13:00:00 -0500
 # First Steps
 
 ## [Step 1] Make GitHub Account
-This tutorial relies on GitHub Codespaces to distribute Cyclus. As such, you 
+This tutorial relies on GitHub Codespaces to distribute `Cyclus`. As such, you 
 will need a GitHub account to participate. If you already have an account on 
 GitHub, feel free to skip this step. If not, follow these instructions to make 
 one. You do not need git installed locally for this tutorial.
@@ -57,7 +59,7 @@ which should bring up a menu that looks like this:
 
 3. Click the green `Create Codespace` button within the menu shown above to 
 create a GitHub Codespace. This will open up a new browser tab and place you in
- a VS Code development environment inside your browser with Cyclus 
+ a VS Code development environment inside your browser with `Cyclus` 
  pre-installed and configured. While it is loading, do not hit any buttons. It 
  will take up to 10 minutes to fully  initialize. During this initialization, it 
  will look like this:
@@ -70,7 +72,9 @@ If you run into a problem with initialization, it should be safe to refresh the
 
 ## [Step 3] Tour of VS Code
 VS Code is an integrated development environment which boasts a variety of 
-helpful plugins, and will be the editor we use for this tutorial. There are 
+helpful plugins, and will be the editor we use for this tutorial. If you would 
+like to see some tips and tricks for working in the VS Code Codespace, we 
+prepared [some notes.]({{ site.baseurl }}/pages/vscode_tips_tricks) There are 
 four main "panes" within VS code:
 
 ### File Editor:
@@ -80,7 +84,7 @@ In this pane, you will see open files and can edit their contents.
 
 ### Terminal:
 The terminal is where you will be able to interact with the codespace 
-environment and run Cyclus simulations. This is likely the pane you will 
+environment and run `Cyclus` simulations. This is likely the pane you will 
 interact with most after the file editor.
 
 ![Terminal]({{ site.baseurl }}/img/VS-Code-Terminal.png)
@@ -98,16 +102,14 @@ the purpose of this tutorial, we recommend you close this pane.
 
 ![Copilot]({{ site.baseurl }}/img/VS-Code-Copilot.png)
 
-If you would like to see some tips and tricks for working in the VS Code 
-Codespace, we prepared [some notes.](./vscode_tips_tricks.markdown)
 
 ## [Step 4] Verify Cyclus Configuration
-Finally, verify that Cyclus is installed and that your environment is 
+Finally, verify that `Cyclus` is installed and that your environment is 
 configured correctly by running the following commands.
 
 {% highlight shell %}
-$ git config user.name
-$ which cyclus
-$ cyclus_unit_tests
+git config user.name
+which cyclus
+cyclus_unit_tests
 {% endhighlight %}
 
