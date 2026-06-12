@@ -4,7 +4,12 @@
   social: 
     - url: ## replace with your github!
       name: GitHub Page
-
+- name: Paul Wilson
+  pic: /img/empty_image.png ##get temporary placeholder image
+  description: Professor at University of Wisconsin-Madison
+  social: 
+    - url: https://github.com/gonuke
+      name: GitHub Page
 - name: Dean Krueger
   pic: /img/empty_image.png ##get temporary placeholder image
   description: Graduate Student at the University of Wisconsin-Madison 
