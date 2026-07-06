@@ -289,7 +289,7 @@ numbers.
       <config>
         <Storage>
           <in_commods>
-            <val>uSed_sfr_fuel</val>
+            <val>used_sfr_fuel</val>
           </in_commods>
           <out_commods>
             <val>cool_used_sfr_fuel</val>
