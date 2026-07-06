@@ -217,11 +217,11 @@ numbers.
             </info>
             <commodities>
               <item>
-                <commodity>uox_U</commodity>
+                <commodity>separated_uox_U</commodity>
                 <pref>1.0</pref>
               </item>
               <item>
-                <commodity>sfr_U</commodity>
+                <commodity>separated_sfr_U</commodity>
                 <pref>1.0</pref>
               </item>                        
             </commodities>
