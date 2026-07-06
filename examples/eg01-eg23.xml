@@ -94,7 +94,7 @@ numbers.
   <facility>
     <!-- Westinghouse Fuel Mass 90200 kg-->
     <name>LWR</name>
-    <lifetime>960</lifetime>
+    <lifetime>600</lifetime>
     <config>
       <Reactor>
         <fuel_inrecipes>  
