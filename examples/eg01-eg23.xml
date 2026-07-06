@@ -1,95 +1,24 @@
 <!--
-THIS IS A SIMPLE VERSION WHERE:
-ALL U -> U238
-ALL PU -> PU239
-ALL MA -> AM241
-ALL FP -> CS137
-FOR SPENT SFR AND MOX RECIPE.
-****************************************
-COMMODITY (RECIPE)
+This input file models the transition from EG 01 (thermal, 
+critical reactors with a once through fuel cycle) to 
+EG 23 (fast, critical reactors with U/Pu continuous 
+recycle). 
 
-sfr_fuel(sfr_fuel_recipe)
-sfr_waste(sfr_waste_recipe)
-
-uox(uox_recipe)
-uox_waste(uox_waste_recipe)
-****************************************
-
-transition starts at 2015 and runs for 200 years
-100 GWe of LWR installed Capacity (90% CF)
-1 % Assumed annual growth in nuclear energy
-
-Legacy LWRs (Before 2015)
-Half 60 year lifetime
-Other half 80 Year lifetime
-40% thermal efficiency
-
-New LWRs (After 2015)
-Fast Reactors available 2050
-80 year lifetime
-
-Fast Reactors (After 2050)
-80 year lifetime
-
-if out of Dep U use Nat U
-****************************************
-For 250 SFRs for 1 year:
-
-Driver:
-1060.13 t / yr
--> 897.93 t U / yr
--> 162.2 t Pu /yr
-
-Blanket:
-197.07 t / yr
--> 197.07 t U / yr
-
-****************************************
-SFR input fuel (Driver + Blanket)
-Mass = 5867 kg (14/1/3 batch)
-"sfr_fuel"
-****************************************
-SFR:
-84.3% Driver
-    15.3% of Driver Pu
-    84.7% Rep U
-15.7% Blanket
-    100% of Blanket Dep U
-
-Total (5867 kg / 14months)
-    12.9% Pu
-    15.7% dep U
-    71.4% Rep U
-
-Waste:
-  78.5% U
-  12.9% Pu
-  0.0011% MA
-  7.40% FP
-****************************************
-Deploy 1.2
-****************************************
-Fresh Fuel Roughly coincides with:
-UOX to 100 FR mtl fresh 1 
-
-SFR output fuel recipe:
-UOX_to_100_FR_mtl_sf_5 (13.64 % Pu)
-
-BR = (12.97121*.998)/(12.8996341) = 1.00353 
--> The E&S Study does not take into account 
-   new deployment of SFRs, so the BR is slightly over break-even.
-****************************************
-
+The simulation models 2000 to 2100, with the 
+transition starting in 2050, jsut to have round 
+numbers. 
 -->
 
 <simulation>
     <control>
-        <!-- 1959 to 2211 -->
-        <duration>3024</duration>
+        <!-- 2000-2100 with the default 
+         time step of 1/12 of  year -->
+        <duration>1200</duration>
         <startmonth>1</startmonth>
-        <startyear>1959</startyear>
+        <startyear>2000</startyear>
     </control>
 
+  <!-- Loading in the archetypes we need -->
   <archetypes>
     <spec>
       <lib>cycamore</lib>
@@ -104,8 +33,8 @@ BR = (12.97121*.998)/(12.8996341) = 1.00353
       <name>Reactor</name>
     </spec>
     <spec>
-        <lib>cycamore</lib>
-        <name>Mixer</name>
+      <lib>cycamore</lib>
+      <name>Mixer</name>
     </spec>
     <spec>
       <lib>agents</lib>
@@ -125,15 +54,7 @@ BR = (12.97121*.998)/(12.8996341) = 1.00353
     </spec>
     <spec>
       <lib>cycamore</lib>
-      <name>Separations</name>
-    </spec>
-    <spec>
-      <lib>cycamore</lib>
       <name>Enrichment</name>
-    </spec>
-    <spec>
-      <lib>cycamore</lib>
-      <name>FuelFab</name>
     </spec>
     <spec>
       <lib>cycamore</lib>
@@ -141,27 +62,29 @@ BR = (12.97121*.998)/(12.8996341) = 1.00353
     </spec>
   </archetypes>
 
-
+ <!-- Defining each of the prototypes -->
   <facility>
+    <name>Mine</name>
     <config>
       <Source>
         <outcommod>natl_u</outcommod>
-        <throughput>1E299</throughput>
         <outrecipe>natl_u_recipe</outrecipe>
+        <!-- optional parameters -->
+        <throughput>1E299</throughput>
       </Source>
     </config>
-    <name>mine</name>
   </facility>
 
   <facility>
-    <name>enrichment</name>
+    <name>Enrichment</name>
     <config>
       <Enrichment>
         <feed_commod>natl_u</feed_commod>
         <feed_recipe>natl_u_recipe</feed_recipe>
-        <product_commod>uox</product_commod>
+        <product_commod>fresh_lwr_fuel</product_commod>
         <tails_assay>0.003</tails_assay>
         <tails_commod>tailings</tails_commod>
+        <!-- optional parameters -->
         <swu_capacity>1E100</swu_capacity>
         <initial_feed>1E100</initial_feed>
       </Enrichment>
@@ -169,206 +92,26 @@ BR = (12.97121*.998)/(12.8996341) = 1.00353
   </facility>
 
   <facility>
-    <name>sfr_mixer</name>
-    <config>
-        <Mixer>
-            <in_streams>
-                <stream>
-                    <info>
-                        <mixing_ratio>0.128996341</mixing_ratio>
-                        <buf_size>1e100</buf_size>
-                    </info>
-                    <commodities>
-                        <item>
-                            <commodity>uox_Pu</commodity>
-                            <pref>1.0</pref>
-                        </item>
-                        <item>
-                            <commodity>sfr_Pu</commodity>
-                            <pref>2.0</pref>
-                        </item>                        
-                    </commodities>
-                </stream>
-                <stream>
-                    <info>
-                        <mixing_ratio>0.714003659</mixing_ratio>
-                        <buf_size>1e100</buf_size>
-                    </info>
-                    <commodities>
-                        <item>
-                            <commodity>uox_U</commodity>
-                            <pref>1.0</pref>
-                        </item>
-                        <item>
-                            <commodity>sfr_U</commodity>
-                            <pref>1.0</pref>
-                        </item>                        
-                    </commodities>
-                </stream>
-                <stream>
-                    <info>
-                        <mixing_ratio>0.157</mixing_ratio>
-                        <buf_size>1e100</buf_size>
-                    </info>
-                    <commodities>
-                        <item>
-                            <commodity>tailings</commodity>
-                            <pref>2.0</pref>
-                        </item>
-                        <item>
-                            <commodity>natl_u</commodity>
-                            <pref>1.0</pref>
-                        </item>
-                    </commodities>
-                </stream>
-            </in_streams>
-            <out_commod>sfr_fuel</out_commod>
-            <out_buf_size>1e100</out_buf_size>
-            <throughput>1e100</throughput>
-        </Mixer>
-    </config>
-</facility>
-
-  <facility>
-    <name>sink</name>
-    <config>
-      <Sink>
-        <in_commods>
-          <val>tailings</val>
-          <val>reprocess_waste</val>
-          <val>sfr_reprocess_waste</val>
-        </in_commods>
-        <capacity>1E299</capacity>
-      </Sink>
-    </config>
-  </facility>
-
-  <facility>
-    <name>uox_reprocessing</name>
-    <config>
-      <Separations>
-         <feed_commods>   <val>cool_uox_waste</val> </feed_commods>
-         <feed_commod_prefs> <val>1.0</val> </feed_commod_prefs>
-         <feed_recipe>uox_waste_recipe</feed_recipe>
-         <feedbuf_size>1E100</feedbuf_size>
-         <throughput>1E100</throughput>
-         <leftover_commod>reprocess_waste</leftover_commod>
-         <leftoverbuf_size>1E100</leftoverbuf_size>
-         <streams>
-          <item>
-            <commod>uox_Pu</commod>
-            <info>
-              <buf_size>1E100</buf_size>
-              <efficiencies>
-                <item>
-                  <comp>Pu</comp> <eff>.998</eff>
-                </item>
-              </efficiencies>
-            </info>
-          </item>
-          <item>
-            <commod>uox_U</commod>
-            <info>
-              <buf_size>1E100</buf_size>
-              <efficiencies>
-                <item>
-                  <comp>U</comp> <eff>.998</eff>
-                </item>
-              </efficiencies>
-            </info>
-          </item>
-        </streams>
-      </Separations>
-    </config>
-  </facility>
-
-  <facility>
-    <name>sfr_reprocessing</name>
-    <config>
-      <Separations>
-         <feed_commods>   <val>cool_sfr_waste</val>  </feed_commods>
-         <feed_commod_prefs> <val>2.0</val> </feed_commod_prefs>
-         <feedbuf_size>1E100</feedbuf_size>
-         <throughput>1E100</throughput>
-         <leftover_commod>sfr_reprocess_waste</leftover_commod>
-         <leftoverbuf_size>1E100</leftoverbuf_size>
-         <streams>
-          <item>
-            <commod>sfr_Pu</commod>
-            <info>
-              <buf_size>1E100</buf_size>
-              <efficiencies>
-                <item>
-                  <comp>Pu</comp> <eff>.998</eff>
-                </item>
-              </efficiencies>
-            </info>
-          </item>
-          <item>
-            <commod>sfr_U</commod>
-            <info>
-              <buf_size>1E100</buf_size>
-              <efficiencies>
-                <item>
-                  <comp>U</comp> <eff>.998</eff>
-                </item>
-              </efficiencies>
-            </info>
-          </item>
-        </streams>
-      </Separations>
-    </config>
-  </facility>
-
-  <facility>
-      <name>uox_pool</name>
-      <!-- Spent Fuel Spends ~3 years (36 timesteps) -->
-      <!-- in NPP pools prior to process (carre_overview_2009) -->
-      <config>
-          <Storage>
-              <in_commods>
-                  <val>uox_waste</val>
-              </in_commods>
-              <out_commods>
-                  <val>cool_uox_waste</val>
-              </out_commods>
-              <residence_time>36</residence_time>
-              <throughput>1E299</throughput>
-              <max_inv_size>1E299</max_inv_size>
-          </Storage>
-      </config>
-  </facility>
-
-  <facility>
-      <name>sfr_pool</name>
-      <!-- Spent Fuel Spends ~3 years (36 timesteps) -->
-      <!-- in NPP pools prior to process (carre_overview_2009) -->
-      <config>
-          <Storage>
-              <in_commods>
-                  <val>sfr_waste</val>
-              </in_commods>
-              <out_commods>
-                  <val>cool_sfr_waste</val>
-              </out_commods>
-              <residence_time>36</residence_time>
-              <throughput>1E299</throughput>
-              <max_inv_size>1E299</max_inv_size>
-          </Storage>
-      </config>
-  </facility>
-
-  <facility>
     <!-- Westinghouse Fuel Mass 90200 kg-->
-    <name>lwr</name>
+    <name>LWR</name>
     <lifetime>960</lifetime>
     <config>
       <Reactor>
-        <fuel_inrecipes>  <val>uox_recipe</val>       </fuel_inrecipes>
-        <fuel_outrecipes> <val>uox_waste_recipe</val>  </fuel_outrecipes>
-        <fuel_incommods>  <val>uox</val>                   </fuel_incommods>
-        <fuel_outcommods> <val>uox_waste</val>             </fuel_outcommods>
-        <fuel_prefs>      <val>1.0</val>                   </fuel_prefs>
+        <fuel_inrecipes>  
+          <val>fresh_lwr_fuel_recipe</val>         
+        </fuel_inrecipes>
+        <fuel_outrecipes> 
+          <val>used_lwr_fuel_recipe</val>   
+        </fuel_outrecipes>
+        <fuel_incommods>  
+          <val>fresh_lwr_fuel</val>                
+        </fuel_incommods>
+        <fuel_outcommods> 
+          <val>used_lwr_fuel</val>          
+        </fuel_outcommods>
+        <fuel_prefs>      
+          <val>1.0</val>                
+        </fuel_prefs>
         <cycle_time>18</cycle_time>
         <refuel_time>1</refuel_time>
         <assem_size>30160</assem_size>
@@ -380,15 +123,155 @@ BR = (12.97121*.998)/(12.8996341) = 1.00353
   </facility>
 
   <facility>
-      <name>fr</name>
+      <name>UOX_Cooling_Pool</name>
+      <!-- Spent UOX Fuel Spends 3 years (36 timesteps)
+      in NPP pools prior to process -->
+      <config>
+        <Storage>
+          <in_commods>
+            <val>used_lwr_fuel</val>
+          </in_commods>
+          <out_commods>
+            <val>cool_used_lwr_fuel</val>
+          </out_commods>
+          <residence_time>36</residence_time>
+          <!-- optional parameters -->
+          <throughput>1E299</throughput>
+          <max_inv_size>1E299</max_inv_size>
+        </Storage>
+      </config>
+  </facility>
+
+  <facility>
+    <name>UOX_Reprocessing</name>
+    <config>
+      <Separations>
+        <feed_commods>   
+          <val>cool_used_lwr_fuel</val> 
+        </feed_commods>
+        <feed_commod_prefs> 
+          <val>1.0</val> 
+        </feed_commod_prefs>
+        <feed_recipe>used_lwr_fuel_recipe</feed_recipe>
+        <feedbuf_size>1E100</feedbuf_size>
+        <throughput>1E100</throughput>
+        <leftover_commod>uox_reprocess_waste</leftover_commod>
+        <leftoverbuf_size>1E100</leftoverbuf_size>
+        <streams>
+          <item>
+            <commod>separated_uox_Pu</commod>
+            <info>
+              <buf_size>1E100</buf_size>
+              <efficiencies>
+                <item>
+                  <comp>Pu</comp> 
+                  <eff>.998</eff>
+                </item>
+              </efficiencies>
+            </info>
+          </item>
+          <item>
+            <commod>separated_uox_U</commod>
+            <info>
+              <buf_size>1E100</buf_size>
+              <efficiencies>
+                <item>
+                  <comp>U</comp> 
+                  <eff>.998</eff>
+                </item>
+              </efficiencies>
+            </info>
+          </item>
+        </streams>
+      </Separations>
+    </config>
+  </facility>
+
+  <facility>
+    <name>SFR_Mixer</name>
+    <config>
+      <Mixer>
+        <in_streams>
+          <stream>
+            <!-- can use plutonium separated from LWR or SFR fuel -->
+            <info>
+              <mixing_ratio>0.128996341</mixing_ratio>
+              <buf_size>1e100</buf_size>
+            </info>
+            <commodities>
+              <item>
+                <commodity>separated_uox_Pu</commodity>
+                <pref>1.0</pref>
+              </item>
+              <item>
+                <commodity>separated_sfr_Pu</commodity>
+                <pref>2.0</pref>
+              </item>                        
+            </commodities>
+          </stream>
+          <stream>
+            <!-- can use uranium separated from LWR or SFR fuel -->
+            <info>
+              <mixing_ratio>0.714003659</mixing_ratio>
+              <buf_size>1e100</buf_size>
+            </info>
+            <commodities>
+              <item>
+                <commodity>uox_U</commodity>
+                <pref>1.0</pref>
+              </item>
+              <item>
+                <commodity>sfr_U</commodity>
+                <pref>1.0</pref>
+              </item>                        
+            </commodities>
+          </stream>
+          <!-- can top off with enrichment tailings or natural 
+           uranium -->
+          <stream>
+            <info>
+              <mixing_ratio>0.157</mixing_ratio>
+              <buf_size>1e100</buf_size>
+            </info>
+            <commodities>
+              <item>
+                <commodity>tailings</commodity>
+                <pref>2.0</pref>
+              </item>
+              <item>
+                <commodity>natl_u</commodity>
+                <pref>1.0</pref>
+              </item>
+            </commodities>
+          </stream>
+       </in_streams>
+       <out_commod>fresh_sfr_fuel</out_commod>
+       <out_buf_size>1e100</out_buf_size>
+       <throughput>1e100</throughput>
+      </Mixer>
+    </config>
+  </facility> 
+
+  <facility>
+      <name>SFR</name>
       <lifetime>960</lifetime>
       <config>
         <Reactor>
-          <fuel_inrecipes>  <val>sfr_fuel_recipe</val>       </fuel_inrecipes>
-          <fuel_outrecipes> <val>sfr_waste_recipe</val>  </fuel_outrecipes>
-          <fuel_incommods>  <val>sfr_fuel</val>                   </fuel_incommods>
-          <fuel_outcommods> <val>sfr_waste</val>             </fuel_outcommods>
-          <fuel_prefs>      <val>1.0</val>                   </fuel_prefs>
+          <fuel_inrecipes>  
+            <val>fresh_sfr_fuel_recipe</val>       
+          </fuel_inrecipes>
+          <fuel_outrecipes> 
+            <val>used_sfr_fuel_recipe</val>  
+          </fuel_outrecipes>
+          <fuel_incommods>  
+            <val>fresh_sfr_fuel</val>                   
+          </fuel_incommods>
+          <fuel_outcommods> 
+            <val>used_sfr_fuel</val>             
+          </fuel_outcommods>
+          <fuel_prefs>      
+            <val>1.0</val>                   
+          </fuel_prefs>
           <cycle_time>14</cycle_time>
           <refuel_time>1</refuel_time>
           <assem_size>5867</assem_size>
@@ -397,6 +280,85 @@ BR = (12.97121*.998)/(12.8996341) = 1.00353
           <power_cap>400</power_cap>
         </Reactor>
       </config>
+  </facility>
+
+  <facility>
+      <name>SFR_Cooling_Pool</name>
+      <!-- Spent Fuel Spends 3 years (36 timesteps) 
+       in NPP pools prior to process -->
+      <config>
+        <Storage>
+          <in_commods>
+            <val>uSed_sfr_fuel</val>
+          </in_commods>
+          <out_commods>
+            <val>cool_used_sfr_fuel</val>
+          </out_commods>
+          <residence_time>36</residence_time>
+          <!-- optional parameters -->
+          <throughput>1E299</throughput>
+          <max_inv_size>1E299</max_inv_size>
+        </Storage>
+      </config>
+  </facility>
+
+  <facility>
+    <name>SFR_Reprocessing</name>
+    <config>
+      <Separations>
+        <feed_commods>   
+          <val>cool_used_sfr_fuel</val>  
+        </feed_commods>
+        <feed_commod_prefs> 
+          <val>2.0</val> 
+        </feed_commod_prefs>
+        <feedbuf_size>1E100</feedbuf_size>
+        <throughput>1E100</throughput>
+        <leftover_commod>sfr_reprocess_waste</leftover_commod>
+        <leftoverbuf_size>1E100</leftoverbuf_size>
+        <streams>
+          <item>
+            <commod>separated_sfr_Pu</commod>
+            <info>
+              <buf_size>1E100</buf_size>
+              <efficiencies>
+                <item>
+                  <comp>Pu</comp> 
+                  <eff>.998</eff>
+                </item>
+              </efficiencies>
+            </info>
+          </item>
+          <item>
+            <commod>separated_sfr_U</commod>
+            <info>
+              <buf_size>1E100</buf_size>
+              <efficiencies>
+                <item>
+                  <comp>U</comp> 
+                  <eff>.998</eff>
+                </item>
+              </efficiencies>
+            </info>
+          </item>
+        </streams>
+      </Separations>
+    </config>
+  </facility>
+
+  <facility>
+    <name>Waste_Repository</name>
+    <config>
+      <Sink>
+        <in_commods>
+          <val>tailings</val>
+          <val>uox_reprocess_waste</val>
+          <val>sfr_reprocess_waste</val>
+        </in_commods>
+        <!-- optional parameters -->
+        <capacity>1E299</capacity>
+      </Sink>
+    </config>
   </facility>
 
 <!-- Region -->
@@ -410,147 +372,157 @@ BR = (12.97121*.998)/(12.8996341) = 1.00353
         <NullInst/>
       </config>
       <initialfacilitylist>
-
-        <!-- NAT U SOURCE, SINK, ENRICHMENT-->
+        <!-- facilities that we want deployed at the 
+         beginning of the simulation (i.g., time step 0). -->
         <entry>
           <number>1</number>
-          <prototype>mine</prototype>
+          <prototype>Mine</prototype>
         </entry>
         <entry>
           <number>1</number>
-          <prototype>sink</prototype>
+          <prototype>Waste_Repository</prototype>
         </entry>
         <entry>
           <number>1</number>
-          <prototype>enrichment</prototype>
+          <prototype>Enrichment</prototype>
         </entry>
 
         <!-- MIXERS -->
         <entry>
           <number>1</number>
-          <prototype>sfr_mixer</prototype>
+          <prototype>SFR_Mixer</prototype>
         </entry>
 
         <!-- POOLS -->
         <entry>
           <number>1</number>
-          <prototype>sfr_pool</prototype>
+          <prototype>SFR_Cooling_Pool</prototype>
         </entry>
         <entry>
           <number>1</number>
-          <prototype>uox_pool</prototype>
+          <prototype>UOX_Cooling_Pool</prototype>
         </entry>
 
         <!-- REPROCESSING PLANTS -->
         <entry>
           <number>1</number>
-          <prototype>uox_reprocessing</prototype>
+          <prototype>UOX_Reprocessing</prototype>
         </entry>
         <entry>
           <number>1</number>
-          <prototype>sfr_reprocessing</prototype>
+          <prototype>SFR_Reprocessing</prototype>
         </entry>
         
       </initialfacilitylist>
-      <name>sink_source_facilities</name>
+      <name>Initial_Facilities</name>
     </institution>
-<institution>
-          <name>lwr_inst</name>
-          <config>
-               <DeployInst>
-                    <build_times>
-                         <val>12</val>
-                         <val>24</val>
-                         <val>36</val>
-                         <val>48</val>
-                         <val>60</val>
-                         <val>72</val>
-                         <val>84</val>
-                         <val>96</val>
-                         <val>108</val>
-                         <val>120</val>
-                    </build_times>
-                    <n_build>
-                         <val>2</val>
-                         <val>2</val>
-                         <val>2</val>
-                         <val>2</val>
-                         <val>2</val>
-                         <val>2</val>
-                         <val>2</val>
-                         <val>2</val>
-                         <val>2</val>
-                         <val>2</val>
-                    </n_build>
-                    <prototypes>
-                         <val>lwr</val>
-                         <val>lwr</val>
-                         <val>lwr</val>
-                         <val>lwr</val>
-                         <val>lwr</val>
-                         <val>lwr</val>
-                         <val>lwr</val>
-                         <val>lwr</val>
-                         <val>lwr</val>
-                         <val>lwr</val>
-
-                    </prototypes>
-               </DeployInst>
-          </config>
+    <!-- Define a second instritution to define when the 
+     LWRs are deployed, at time steps throughout the 
+     simulation -->
+    <institution>
+      <name>LWR_Institution</name>
+      <config>
+        <DeployInst>
+          <build_times>
+            <!-- what time to deploy a prototype-->
+            <val>12</val>
+            <val>24</val>
+            <val>36</val>
+            <val>48</val>
+            <val>60</val>
+            <val>72</val>
+            <val>84</val>
+            <val>96</val>
+            <val>108</val>
+            <val>120</val>
+          </build_times>
+          <n_build>
+            <!-- how many prototypes to deploy, with 
+             the order mathcing that of the `build_times`
+             input parameters-->
+            <val>2</val>
+            <val>2</val>
+            <val>2</val>
+            <val>2</val>
+            <val>2</val>
+            <val>2</val>
+            <val>2</val>
+            <val>2</val>
+            <val>2</val>
+            <val>2</val>
+          </n_build>
+          <prototypes>
+            <!-- which prototype or deploy at each 
+             time identified, with the order mathcing 
+             that of the `build_times` input -->
+            <val>LWR</val>
+            <val>LWR</val>
+            <val>LWR</val>
+            <val>LWR</val>
+            <val>LWR</val>
+            <val>LWR</val>
+            <val>LWR</val>
+            <val>LWR</val>
+            <val>LWR</val>
+            <val>LWR</val>
+          </prototypes>
+       </DeployInst>
+      </config>
+    </institution>
+    <!-- Third institution to define when the SFR prototype 
+     gets deployed -->
+    <institution>
+      <name>SFR_Institution</name>
+      <config>
+        <DeployInst>
+          <build_times>
+            <!-- what time to deploy a prototype-->
+            <val>600</val>
+            <val>612</val>
+            <val>624</val>
+            <val>636</val>
+            <val>648</val>
+            <val>660</val>
+            <val>672</val>
+            <val>684</val>
+            <val>696</val>
+            <val>708</val>
+          </build_times>
+          <n_build>
+            <val>2</val>
+            <val>2</val>
+            <val>2</val>
+            <val>2</val>
+            <val>2</val>
+            <val>2</val>
+            <val>2</val>
+            <val>2</val>
+            <val>2</val>
+            <val>2</val>
+          </n_build>
+          <prototypes>
+            <!-- which prototype or deploy at each 
+             time identified, with the order mathcing 
+             that of the `build_times` input -->
+            <val>SFR</val>
+            <val>SFR</val>
+            <val>SFR</val>
+            <val>SFR</val>
+            <val>SFR</val>
+            <val>SFR</val>
+            <val>SFR</val>
+            <val>SFR</val>
+            <val>SFR</val>
+            <val>SFR</val>
+          </prototypes>
+        </DeployInst>
+      </config>
      </institution>
-
-     <institution>
-          <config>
-               <DeployInst>
-                    <prototypes>
-                         
-                         
-                         <val>fr</val>
-                         <val>fr</val>
-                         <val>fr</val>
-                         <val>fr</val>
-                         <val>fr</val>
-                         <val>fr</val>
-                         <val>fr</val>
-                         <val>fr</val>
-                         <val>fr</val>
-                         <val>fr</val>
-                    </prototypes>
-                    <n_build> 
-                         <val>17</val>
-                         <val>17</val>
-                         <val>17</val>
-                         <val>15</val>
-                         <val>18</val>
-                         <val>15</val>
-                         <val>17</val>
-                         <val>15</val>
-                         <val>20</val>
-                         <val>15</val>
-                    </n_build>
-                    <build_times>
-                         <val>1884</val>
-                         <val>1896</val>
-                         <val>1908</val>
-                         <val>1920</val>
-                         <val>1932</val>
-                         <val>1944</val>
-                         <val>1956</val>
-                         <val>1968</val>
-                         <val>1980</val>
-                         <val>1992</val>
-                    </build_times>
-               </DeployInst>
-          </config>
-          <name>fr_inst</name>
-     </institution>
-
     <name>USA</name>
   </region>
 
-<!-- Recipes -->
-
-
+<!-- Recipes - these are determined outside of the 
+ Cyclus simulation -->
   <recipe>
     <name>natl_u_recipe</name>
     <basis>mass</basis>
@@ -559,23 +531,15 @@ BR = (12.97121*.998)/(12.8996341) = 1.00353
   </recipe>
 
   <recipe>
-    <name>uox_recipe</name>
+    <name>fresh_lwr_fuel_recipe</name>
     <basis>mass</basis>
      <nuclide> <id>U234</id>  <comp>0.0002558883</comp> </nuclide> 
      <nuclide> <id>U235</id>  <comp>0.0319885317</comp> </nuclide> 
      <nuclide> <id>U238</id>  <comp>0.96775558</comp> </nuclide> 
   </recipe> 
 
-  <recipe>
-    <name>depleted_u</name>
-    <basis>mass</basis>
-    <nuclide> <id>U235</id><comp>0.003</comp></nuclide>
-    <nuclide><id>U238</id><comp>0.997</comp></nuclide>
-  </recipe>
-
-
    <recipe>
-    <name>uox_waste_recipe</name>
+    <name>used_lwr_fuel_recipe</name>
     <basis>mass</basis>
     <nuclide> <id>He4</id>  <comp>9.47457840128509E-07</comp> </nuclide> 
      <nuclide> <id>Ra226</id>  <comp>9.78856442957042E-14</comp> </nuclide> 
@@ -634,7 +598,7 @@ BR = (12.97121*.998)/(12.8996341) = 1.00353
   </recipe> 
 
     <recipe>
-    <name>sfr_fuel_recipe</name>
+    <name>fresh_sfr_fuel_recipe</name>
     <basis>mass</basis>
          <nuclide> <id>U234</id>  <comp>9.7224110389438E-05</comp> </nuclide> 
      <nuclide> <id>U235</id>  <comp>0.0039469814</comp> </nuclide> 
@@ -656,7 +620,7 @@ BR = (12.97121*.998)/(12.8996341) = 1.00353
   </recipe> 
 
    <recipe>
-    <name>sfr_waste_recipe</name>
+    <name>used_sfr_fuel_recipe</name>
     <basis>mass</basis>
      <nuclide> <id>U238</id>  <comp>79.29</comp> </nuclide> 
      <nuclide> <id>Pu239</id>  <comp>13.102</comp> </nuclide> 
