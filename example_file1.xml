@@ -1,0 +1,38 @@
+<?xml-model href="cyclus_grammar_codespaces-c6c067_1783974147.rng" application="text/xml"?>
+<simulation>
+    <control>
+        <duration>100</duration>
+        <startmonth>1</startmonth>
+        <startyear>2000</startyear>
+    </control>
+    <archetypes>
+        <spec><lib>cycamore</lib>  <name>Reactor</name></spec>
+    </archetypes>
+    <facility>
+        <name>PWR</name>
+        <config>
+            <Reactor>
+                <fuel_incommods>
+                    <val>fresh_uox</val>
+                    <val>fresh_mox</val>
+                </fuel_incommods>    
+                <fuel_outcommods>
+                    <val>spent_uox</val>
+                    <val>spent_mox</val>
+                </fuel_outcommods>
+            </Reactor>
+        </config>
+    </facility>
+    <region>
+        <name></name>
+        <institution>
+            <name></name>
+            <config>
+
+            </config>
+        </institution>
+        <config>
+
+        </config>
+    </region>
+</simulation>
